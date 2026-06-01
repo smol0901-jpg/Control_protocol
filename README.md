@@ -122,8 +122,12 @@ MIT © NEURAL_ARCHTECT_PREMIUM++
 🤝 Контакты
 Автор: NEURAL_ARCHTECT_PREMIUM++
 
-Email: your-email@example.com
+vk.ru/smolyaninovchef
+dzen.ru/asv_prod
+telegramm @asv_prod
 
-GitHub: https://github.com/yourname/devcleaner-pro
+GitHub: https://github.com/yourname/devcleaner-pro](https://github.com/smol0901-jpg/Control_protocol
+https://github.com/smol0901-jpg/Control_protocol/releases/tag/NAP_Control_protocol
+https://github.com/smol0901-jpg/Control_protocol/releases/download/NAP_Control_protocol/NEURAL_ARCHTECT_PREMIUM++_v8.3_Setup.exe)
 
 DevCleaner Pro – ваш заботливый оркестр для чистоты и порядка в процессах разработки.
