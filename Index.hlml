@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DevCleaner Pro v8.3 — интеллектуальная система оптимизации для разработчиков">
+    <title>DevCleaner Pro v8.3 | Интеллектуальная оптимизация разработки</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        
+        :root {
+            --color-bg-primary: #fafafa;
+            --color-bg-secondary: #f0f0f0;
+            --color-bg-tertiary: #e8e8e8;
+            --color-text-primary: #1a1a1a;
+            --color-text-secondary: #4a4a4a;
+            --color-text-tertiary: #717171;
+            --color-accent: #0066cc;
+            --color-accent-light: #3399ff;
+            --color-accent-dark: #004c99;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-2xl: 32px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 100px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Animated mesh gradient background */
+        .mesh-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(at 0% 0%, rgba(102, 126, 234, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(240, 147, 251, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(79, 172, 254, 0.08) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
+            animation: meshMove 20s ease-in-out infinite;
+        }
+
+        @keyframes meshMove {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* Noise texture overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.02;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1.25rem 2rem;
+            background: rgba(250, 250, 250, 0.8);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all var(--transition-base);
+        }
+
+        .nav.scrolled {
+            padding: 0.75rem 2rem;
+            background: rgba(250, 250, 250, 0.95);
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--color-text-primary);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-brand-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--color-text-secondary);
+            font-weight: 500;
+            font-size: 0.9375rem;
+            transition: color var(--transition-fast);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: width var(--transition-base);
+        }
+
+        .nav-links a:hover {
+            color: var(--color-text-primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-accent);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--color-success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease 0.1s both;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--color-text-secondary);
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.7;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .hero-author {
+            font-size: 0.9375rem;
+            color: var(--color-text-tertiary);
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.8s ease 0.3s both;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.625rem;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: var(--radius-lg);
+            transition: all var(--transition-base);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-lg), 0 0 0 0 rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl), 0 0 0 8px rgba(102, 126, 234, 0);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-bg-tertiary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-bg-secondary);
+            border-color: var(--color-bg-tertiary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--color-text-secondary);
+            border: 1px solid transparent;
+        }
+
+        .btn-ghost:hover {
+            background: var(--color-bg-secondary);
+            color: var(--color-text-primary);
+            border-color: var(--color-bg-tertiary);
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            margin-bottom: 4rem;
+            text-align: center;
+        }
+
+        .section-label {
+            display: inline-block;
+            padding: 0.375rem 1rem;
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--color-accent);
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 50px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--color-text-primary);
+            letter-spacing: -1px;
+            margin-bottom: 1rem;
+        }
+
+        .section-description {
+            font-size: 1.125rem;
+            color: var(--color-text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: all var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform var(--transition-base);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-text-primary);
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.5px;
+        }
+
+        .card-description {
+            color: var(--color-text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Grid Layouts */
+        .grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Requirements List */
+        .requirements-list {
+            display: grid;
+            gap: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .requirement-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: all var(--transition-fast);
+        }
+
+        .requirement-item:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateX(4px);
+        }
+
+        .requirement-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-success);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .requirement-text {
+            font-weight: 500;
+            color: var(--color-text-primary);
+        }
+
+        /* Installation Cards */
+        .install-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .install-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .install-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: var(--gradient-primary);
+            opacity: 0.05;
+            border-radius: 0 0 0 100%;
+        }
+
+        .install-card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .install-card-number {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .install-card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-text-primary);
+        }
+
+        .install-steps {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .install-steps li {
+            counter-increment: step-counter;
+            padding: 0.75rem 0;
+            padding-left: 2.5rem;
+            position: relative;
+            color: var(--color-text-secondary);
+        }
+
+        .install-steps li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            background: var(--color-bg-secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-text-primary);
+        }
+
+        /* Tables */
+        .table-container {
+            background: white;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--color-bg-secondary);
+        }
+
+        th {
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
+            color: var(--color-text-secondary);
+        }
+
+        tbody tr:hover {
+            background: var(--color-bg-primary);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875em;
+            background: var(--color-bg-secondary);
+            padding: 0.25rem 0.625rem;
+            border-radius: var(--radius-sm);
+            color: var(--color-accent);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #1e1e2e;
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .code-block-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .code-block-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .code-block-dot:nth-child(1) { background: #ff5f56; }
+        .code-block-dot:nth-child(2) { background: #ffbd2e; }
+        .code-block-dot:nth-child(3) { background: #27ca40; }
+
+        .code-block pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            color: #a6accd;
+            overflow-x: auto;
+        }
+
+        .code-block .key { color: #7dd3fc; }
+        .code-block .value { color: #fbbf24; }
+        .code-block .bool { color: #34d399; }
+        .code-block .string { color: #f472b6; }
+
+        /* Tech Stack */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+
+        .tech-item {
+            padding: 0.625rem 1.25rem;
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            transition: all var(--transition-fast);
+        }
+
+        .tech-item:hover {
+            background: var(--color-bg-secondary);
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--gradient-primary);
+            border-radius: var(--radius-2xl);
+            padding: 5rem 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-2xl);
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            animation: rotate 30s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: white;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .cta-description {
+            font-size: 1.125rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-white {
+            background: white;
+            color: var(--color-accent);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-white:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .btn-outline-white {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-outline-white:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--color-text-primary);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 4rem 2rem 2rem;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-text {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-fast);
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .grid-4 { grid-template-columns: repeat(2, 1fr); }
+            .grid-3 { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .install-grid { grid-template-columns: 1fr; }
+            .hero-cta { flex-direction: column; align-items: stretch; }
+            .btn { width: 100%; justify-content: center; }
+            .section { padding: 4rem 1.5rem; }
+        }
+
+        /* Scroll animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--color-bg-tertiary), transparent);
+            margin: 4rem 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '✦';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--color-bg-primary);
+            padding: 0 1.5rem;
+            color: var(--color-accent);
+            font-size: 1.25rem;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: white;
+            border-left: 4px solid var(--color-accent);
+            padding: 1.5rem 2rem;
+            border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-box strong {
+            color: var(--color-text-primary);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box code {
+            background: var(--color-bg-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+        }
+    </style>
+</head>
+<body>
+    <div class="mesh-gradient"></div>
+    <div class="noise-overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-container">
+            <a href="#" class="nav-brand">
+                <div class="nav-brand-icon">⚡</div>
+                <span>DevCleaner Pro</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features">Возможности</a></li>
+                <li><a href="#api">API</a></li>
+                <li><a href="#install">Установка</a></li>
+                <li><a href="#config">Настройка</a></li>
+                <li><a href="#download">Скачать</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">v8.3.0 Stable Release</div>
+            <h1>DevCleaner Pro</h1>
+            <p class="hero-subtitle">
+                Автономный инструмент для мониторинга и оптимизации dev-процессов на Windows с ML-анализом
+            </p>
+            <p class="hero-author">Автор: NEURAL ARCHITECT PREMIUM++</p>
+            <div class="hero-cta">
+                <a href="https://github.com/smol0901-jpg/Control_protocol/releases/download/NAP_Control_protocol/NEURAL_ARCHTECT_PREMIUM++_v8.3_Setup.exe" class="btn btn-primary">
+                    ⬇ Скачать установщик
+                </a>
+                <a href="https://github.com/smol0901-jpg/Control_protocol/releases/download/NAP_Control_protocol/DevCleanerPro_Portable_v8.3.zip" class="btn btn-secondary">
+                    📦 Портативная версия
+                </a>
+                <a href="https://github.com/smol0901-jpg/Control_protocol" class="btn btn-ghost">
+                    🐙 GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- What is it -->
+    <section class="section">
+        <div class="section-header reveal">
+            <span class="section-label">О продукте</span>
+            <h2 class="section-title">Что это?</h2>
+        </div>
+        <div class="card reveal">
+            <p style="font-size: 1.125rem; line-height: 1.8; color: var(--color-text-secondary); margin-bottom: 1rem;">
+                DevCleaner Pro — это утилита для разработчиков, которая отслеживает процессы в реальном времени, 
+                помогает освобождать ресурсы и поддерживать порядок в системе.
+            </p>
+            <p style="font-size: 1.125rem; line-height: 1.8; color: var(--color-text-secondary);">
+                Программа автоматически находит «тяжёлые» процессы (Node.js, Python, Java, PowerShell, компиляторы), 
+                анализирует их влияние на систему и предлагает завершить. Использует ML-модель для оценки 
+                безопасности завершения.
+            </p>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Features -->
+    <section class="section" id="features">
+        <div class="section-header reveal">
+            <span class="section-label">Функционал</span>
+            <h2 class="section-title">Возможности</h2>
+            <p class="section-description">
+                Полный набор инструментов для эффективной оптимизации вашей системы
+            </p>
+        </div>
+        <div class="features-grid">
+            <div class="card reveal">
+                <div class="card-icon">📊</div>
+                <h3 class="card-title">Мониторинг процессов</h3>
+                <p class="card-description">Отслеживает dev-процессы, анализирует нагрузку на CPU и память</p>
+            </div>
+            <div class="card reveal">
+                <div class="card-icon">🤖</div>
+                <h3 class="card-title">ML-анализ</h3>
+                <p class="card-description">Модель Random Forest предсказывает безопасность завершения процессов</p>
+            </div>
+            <div class="card reveal">
+                <div class="card-icon">🗑️</div>
+                <h3 class="card-title">Очистка кэшей</h3>
+                <p class="card-description">Удаляет временные файлы npm, pip, Yarn, Gradle, Maven, VS Code</p>
+            </div>
+            <div class="card reveal">
+                <div class="card-icon">📄</div>
+                <h3 class="card-title">PDF-отчёты</h3>
+                <p class="card-description">Создаёт отчёты с графиками, статистикой и рекомендациями</p>
+            </div>
+            <div class="card reveal">
+                <div class="card-icon">📺</div>
+                <h3 class="card-title">HUD с графиками</h3>
+                <p class="card-description">Отдельное окно с графиками CPU и памяти в реальном времени</p>
+            </div>
+            <div class="card reveal">
+                <div class="card-icon">🌐</div>
+                <h3 class="card-title">HTTP API</h3>
+                <p class="card-description">Управление программой через REST API на порту 5050</p>
+            </div>
+            <div class="card reveal">
+                <div class="card-icon">⚡</div>
+                <h3 class="card-title">Лёгкий режим</h3>
+                <p class="card-description">Отключает автообучение ML для экономии ресурсов</p>
+            </div>
+            <div class="card reveal">
+                <div class="card-icon">🛡️</div>
+                <h3 class="card-title">Белый список</h3>
+                <p class="card-description">Важные процессы можно добавить в исключения</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- System Requirements -->
+    <section class="section">
+        <div class="section-header reveal">
+            <span class="section-label">Требования</span>
+            <h2 class="section-title">Системные требования</h2>
+        </div>
+        <div class="requirements-list reveal">
+            <div class="requirement-item">
+                <div class="requirement-icon">✓</div>
+                <div class="requirement-text">ОС: Windows 10 / 11 (64‑бит)</div>
+            </div>
+            <div class="requirement-item">
+                <div class="requirement-icon">✓</div>
+                <div class="requirement-text">Процессор: Intel Celeron N4120 или аналогичный</div>
+            </div>
+            <div class="requirement-item">
+                <div class="requirement-icon">✓</div>
+                <div class="requirement-text">ОЗУ: 8 ГБ (рекомендуется)</div>
+            </div>
+            <div class="requirement-item">
+                <div class="requirement-icon">✓</div>
+                <div class="requirement-text">Диск: ~500 МБ свободного места</div>
+            </div>
+            <div class="requirement-item">
+                <div class="requirement-icon">✓</div>
+                <div class="requirement-text">Права: Администратор (для завершения процессов)</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Installation -->
+    <section class="section" id="install">
+        <div class="section-header reveal">
+            <span class="section-label">Начало работы</span>
+            <h2 class="section-title">Установка</h2>
+        </div>
+        <div class="install-grid">
+            <div class="install-card reveal">
+                <div class="install-card-header">
+                    <div class="install-card-number">1</div>
+                    <h3 class="install-card-title">Установщик</h3>
+                </div>
+                <ol class="install-steps">
+                    <li>Скачайте <code>NEURAL_ARCHTECT_PREMIUM++_v8.3_Setup.exe</code></li>
+                    <li>Запустите файл и следуйте инструкциям мастера</li>
+                    <li>После установки программа добавится в автозагрузку</li>
+                </ol>
+            </div>
+            <div class="install-card reveal">
+                <div class="install-card-header">
+                    <div class="install-card-number">2</div>
+                    <h3 class="install-card-title">Портативная версия</h3>
+                </div>
+                <ol class="install-steps">
+                    <li>Скачайте <code>DevCleanerPro_Portable_v8.3.zip</code></li>
+                    <li>Распакуйте в любую папку</li>
+                    <li>Запустите <code>DevCleanerPro.exe</code></li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Usage -->
+    <section class="section">
+        <div class="section-header reveal">
+            <span class="section-label">Руководство</span>
+            <h2 class="section-title">Использование</h2>
+        </div>
+        <div class="info-box reveal">
+            <strong>После запуска</strong>
+            <p style="color: var(--color-text-secondary); margin-top: 0.5rem;">
+                В системном трее появляется зелёная иконка. Нажмите правой кнопкой для доступа к меню.
+            </p>
+        </div>
+        
+        <h3 style="font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-text-primary);">Пункты меню</h3>
+        <div class="table-container reveal">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Пункт меню</th>
+                        <th>Описание</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>👤 <strong>Войти</strong></td><td>Авторизация (admin / admin123!)</td></tr>
+                    <tr><td>📊 <strong>Статистика</strong></td><td>Сводка по убитым процессам и очищенной памяти</td></tr>
+                    <tr><td>🖥️ <strong>Главное окно</strong></td><td>Полный интерфейс с вкладками</td></tr>
+                    <tr><td>🔍 <strong>Сканировать сейчас</strong></td><td>Поиск тяжёлых процессов</td></tr>
+                    <tr><td>📄 <strong>Создать отчёт</strong></td><td>Генерация PDF-отчёта</td></tr>
+                    <tr><td>📺 <strong>HUD с графиками</strong></td><td>Открыть окно с графиками</td></tr>
+                    <tr><td>⚡ <strong>Лёгкий режим</strong></td><td>Экономия ресурсов</td></tr>
+                    <tr><td>🌐 <strong>API Сервер</strong></td><td>Включить HTTP API</td></tr>
+                    <tr><td>❌ <strong>Выход</strong></td><td>Закрыть программу</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- API -->
+    <section class="section" id="api">
+        <div class="section-header reveal">
+            <span class="section-label">Интеграция</span>
+            <h2 class="section-title">HTTP API</h2>
+        </div>
+        <div class="info-box reveal">
+            <strong>Базовый URL:</strong>
+            <code style="margin-left: 0.5rem;">http://127.0.0.1:5050/api</code>
+        </div>
+        
+        <h3 style="font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-text-primary);">Эндпоинты</h3>
+        <div class="table-container reveal">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Метод</th>
+                        <th>Эндпоинт</th>
+                        <th>Описание</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>POST</code></td><td><code>/login</code></td><td>Получить токен</td></tr>
+                    <tr><td><code>GET</code></td><td><code>/processes</code></td><td>Список dev-процессов</td></tr>
+                    <tr><td><code>POST</code></td><td><code>/kill/&lt;pid&gt;</code></td><td>Завершить процесс</td></tr>
+                    <tr><td><code>POST</code></td><td><code>/kill_all</code></td><td>Завершить все безопасные процессы</td></tr>
+                    <tr><td><code>POST</code></td><td><code>/clean_cache</code></td><td>Очистить кэши разработки</td></tr>
+                    <tr><td><code>GET</code></td><td><code>/stats</code></td><td>Статистика системы</td></tr>
+                    <tr><td><code>GET</code></td><td><code>/report?type=daily</code></td><td>Сгенерировать отчёт</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Configuration -->
+    <section class="section" id="config">
+        <div class="section-header reveal">
+            <span class="section-label">Конфигурация</span>
+            <h2 class="section-title">Настройка</h2>
+        </div>
+        <div class="info-box reveal">
+            <strong>Файл конфигурации:</strong>
+            <code style="margin-left: 0.5rem;">C:\Users\&lt;Имя&gt;\.devcleaner_pro\config.json</code>
+        </div>
+        
+        <div class="code-block reveal">
+            <div class="code-block-header">
+                <div class="code-block-dot"></div>
+                <div class="code-block-dot"></div>
+                <div class="code-block-dot"></div>
+            </div>
+            <pre>{
+  <span class="key">"alert_memory_mb"</span>: <span class="value">500</span>,
+  <span class="key">"alert_cpu_percent"</span>: <span class="value">80</span>,
+  <span class="key">"auto_kill"</span>: <span class="bool">false</span>,
+  <span class="key">"scan_interval_seconds"</span>: <span class="value">30</span>,
+  <span class="key">"auto_report_interval_hours"</span>: <span class="value">24</span>,
+  <span class="key">"api_enabled"</span>: <span class="bool">false</span>,
+  <span class="key">"process_whitelist"</span>: []
+}</pre>
+        </div>
+
+        <div class="grid grid-2" style="margin-top: 2rem;">
+            <div class="card reveal">
+                <h3 class="card-title">alert_memory_mb / alert_cpu_percent</h3>
+                <p class="card-description">Пороги для уведомлений о тяжёлых процессах</p>
+            </div>
+            <div class="card reveal">
+                <h3 class="card-title">auto_kill</h3>
+                <p class="card-description">Автоматическое завершение безопасных процессов</p>
+            </div>
+            <div class="card reveal">
+                <h3 class="card-title">scan_interval_seconds</h3>
+                <p class="card-description">Интервал сканирования процессов</p>
+            </div>
+            <div class="card reveal">
+                <h3 class="card-title">api_enabled</h3>
+                <p class="card-description">Включение API при старте программы</p>
+            </div>
+            <div class="card reveal" style="grid-column: 1 / -1;">
+                <h3 class="card-title">process_whitelist</h3>
+                <p class="card-description">Список игнорируемых процессов</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Logs & Tech -->
+    <section class="section">
+        <div class="section-header reveal">
+            <span class="section-label">Техническая информация</span>
+            <h2 class="section-title">Логи и технологии</h2>
+        </div>
+        
+        <h3 style="font-size: 1.5rem; font-weight: 700; margin: 2rem 0 1rem; color: var(--color-text-primary);">📁 Логи</h3>
+        <div class="info-box reveal">
+            <strong>Путь:</strong>
+            <code style="margin-left: 0.5rem;">C:\Users\&lt;Имя&gt;\.devcleaner_pro\error_logs\</code>
+        </div>
+        <div class="requirements-list reveal" style="margin-top: 1.5rem;">
+            <div class="requirement-item">
+                <div class="requirement-icon">✓</div>
+                <div class="requirement-text">Все события записываются в структурированные логи</div>
+            </div>
+            <div class="requirement-item">
+                <div class="requirement-icon">✓</div>
+                <div class="requirement-text">Автоматическая ротация: 1000 строк на файл</div>
+            </div>
+            <div class="requirement-item">
+                <div class="requirement-icon">✓</div>
+                <div class="requirement-text">Общий объём не более 100 МБ</div>
+            </div>
+        </div>
+
+        <h3 style="font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-text-primary);">🛠️ Технологический стек</h3>
+        <div class="tech-stack reveal">
+            <span class="tech-item">Python 3.10+</span>
+            <span class="tech-item">PyQt5</span>
+            <span class="tech-item">scikit-learn</span>
+            <span class="tech-item">pandas</span>
+            <span class="tech-item">numpy</span>
+            <span class="tech-item">Flask</span>
+            <span class="tech-item">reportlab</span>
+            <span class="tech-item">psutil</span>
+            <span class="tech-item">pystray</span>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" id="download">
+        <div class="cta-section reveal">
+            <div class="cta-content">
+                <h2 class="cta-title">📦 Скачать последнюю версию</h2>
+                <p class="cta-description">
+                    DevCleaner Pro — ваш заботливый оркестр для чистоты и порядка в процессах разработки.
+                </p>
+                <div class="cta-buttons">
+                    <a href="https://github.com/smol0901-jpg/Control_protocol/releases/download/NAP_Control_protocol/NEURAL_ARCHTECT_PREMIUM++_v8.3_Setup.exe" class="btn btn-white">
+                        ⬇ Установщик
+                    </a>
+                    <a href="https://github.com/smol0901-jpg/Control_protocol/releases/download/NAP_Control_protocol/DevCleanerPro_Portable_v8.3.zip" class="btn btn-outline-white">
+                        📦 Портативная
+                    </a>
+                    <a href="https://github.com/smol0901-jpg/Control_protocol" class="btn btn-outline-white">
+                        🐙 GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-text">© 2026 NEURAL ARCHITECT PREMIUM++</p>
+            <p class="footer-text">Лицензия MIT. Бесплатно для личного и коммерческого использования</p>
+            <div class="footer-links">
+                <a href="https://github.com/smol0901-jpg/Control_protocol">GitHub репозиторий</a>
+                <a href="https://github.com/smol0901-jpg/Control_protocol/releases">Releases</a>
+                <a href="#features">Документация</a>
+            </div>
+            <div class="footer-bottom">
+                <p>Сделано с вниманием к деталям</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation scroll effect
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll reveal animation
+        const reveals = document.querySelectorAll('.reveal');
+        const revealOnScroll = () => {
+            reveals.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                if (elementTop < windowHeight - 100) {
+                    element.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        window.addEventListener('load', revealOnScroll);
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
