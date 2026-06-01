@@ -1,6 +1,6 @@
-﻿"""
+"""
 DevCleaner Pro – Основное приложение (v8.3 NEURAL_ARCHTECT_PREMIUM++)
-Белый список процессов, улучшенный помощник, логирование, ML‑анализ.
+Белый список, улучшенный помощник, логирование, ML‑анализ.
 """
 import sys, os, json, time, threading, subprocess, glob
 from pathlib import Path
@@ -154,7 +154,6 @@ class DevCleanerPro:
         self.last_alert_time = 0
         self.alert_cooldown = 300
 
-    # --- Конфигурация и статистика ---
     def _load_config(self) -> dict:
         defaults = {
             'memory_threshold_mb': 500,
@@ -169,7 +168,7 @@ class DevCleanerPro:
             'api_enabled': False,
             'alert_memory_mb': 300,
             'alert_cpu_percent': 50,
-            'process_whitelist': []   # имена процессов, которые не трогаем
+            'process_whitelist': []
         }
         if CONFIG_PATH.exists():
             try:
@@ -240,7 +239,6 @@ class DevCleanerPro:
             'memory_total_gb': psutil.virtual_memory().total / 1024**3,
         }
 
-    # --- Основные методы ---
     def generate_report(self, report_type="daily"):
         try:
             processes = self.monitor.scan_processes()
@@ -325,7 +323,7 @@ class DevCleanerPro:
         else:
             hud_exe = Path(sys.executable).parent / "DevHud.exe"
             if not hud_exe.exists():
-                hud_exe = Path(__file__).parent / "dist" / "DevHud.exe"
+                hud_exe = Path(__file__).parent / "DevHud.exe"
             if hud_exe.exists():
                 try:
                     self.hud_process = subprocess.Popen(
@@ -355,9 +353,8 @@ class DevCleanerPro:
         if self.icon:
             self.icon.update_menu()
 
-    # --- Белый список процессов ---
+    # --- Белый список ---
     def add_to_whitelist(self, proc_name: str):
-        """Добавляет имя процесса в белый список и сохраняет конфиг."""
         name = proc_name.lower()
         whitelist = self.config.setdefault('process_whitelist', [])
         if name not in whitelist:
@@ -368,7 +365,6 @@ class DevCleanerPro:
                 logger.log("INFO", f"Добавлен в белый список: {proc_name}")
 
     def remove_from_whitelist(self, proc_name: str):
-        """Удаляет имя процесса из белого списка."""
         name = proc_name.lower()
         whitelist = self.config.get('process_whitelist', [])
         if name in whitelist:
@@ -379,10 +375,9 @@ class DevCleanerPro:
                 logger.log("INFO", f"Удалён из белого списка: {proc_name}")
 
     def is_whitelisted(self, proc_name: str) -> bool:
-        """Проверяет, находится ли процесс в белом списке."""
         return proc_name.lower() in self.config.get('process_whitelist', [])
 
-    # --- Поиск тяжёлых процессов (с учётом белого списка) ---
+    # --- Поиск тяжёлых процессов ---
     def find_suspicious_processes(self):
         suspicious = []
         try:
@@ -409,7 +404,6 @@ class DevCleanerPro:
             try:
                 if proc.pid == my_pid:
                     continue
-                # Пропускаем процессы из белого списка
                 if self.is_whitelisted(proc.info['name']):
                     continue
                 mem = proc.info['memory_info'].rss / 1024 / 1024
@@ -434,28 +428,7 @@ class DevCleanerPro:
         unique_heavy.sort(key=lambda x: x['memory_mb'], reverse=True)
         return unique_heavy[:20]
 
-    # --- Обработчики меню ---
-    def on_login(self, icon, item):
-        if self.login("admin", "admin123!"):
-            self.send_notification("Авторизация", "Вход выполнен успешно!")
-            if logger:
-                logger.log("INFO", "Выполнен вход")
-        else:
-            self.send_notification("Ошибка", "Неверные учетные данные")
-
-    def on_generate_report(self, icon, item):
-        if not self.session_token:
-            self.send_notification("Требуется вход", "Сначала авторизуйтесь!")
-            return
-        self.generate_report("daily")
-
-    def on_toggle_hud(self, icon, item):
-        self.toggle_hud()
-
-    def on_toggle_api(self, icon, item):
-        self.toggle_api()
-
-    # --- Автоматический помощник ---
+    # --- Автоматический помощник и мониторинг ---
     def process_alert_loop(self):
         while self.running:
             try:
@@ -547,9 +520,14 @@ class DevCleanerPro:
                 logger.log("INFO", f"Завершён процесс PID {pid}")
 
         def whitelist_callback(pid):
-            name = next((p['name'] for p in processes if p['pid'] == pid), None)
-            if name:
-                self.add_to_whitelist(name)
+            try:
+                name = next((p['name'] for p in processes if p['pid'] == pid), None)
+                if name:
+                    self.add_to_whitelist(name)
+            except Exception as e:
+                if logger:
+                    logger.log("ERROR", f"Ошибка добавления в белый список: {e}")
+                self.send_notification("Ошибка", "Не удалось добавить процесс в белый список.")
 
         try:
             dlg = ProcessAlertDialog(processes, kill_callback, whitelist_callback)
@@ -558,6 +536,27 @@ class DevCleanerPro:
             if logger:
                 logger.log("ERROR", f"Ошибка при показе диалога: {e}")
             self.send_notification("Ошибка", "Не удалось открыть окно помощника. Смотрите error.log")
+
+    # --- Обработчики меню ---
+    def on_login(self, icon, item):
+        if self.login("admin", "admin123!"):
+            self.send_notification("Авторизация", "Вход выполнен успешно!")
+            if logger:
+                logger.log("INFO", "Выполнен вход")
+        else:
+            self.send_notification("Ошибка", "Неверные учетные данные")
+
+    def on_generate_report(self, icon, item):
+        if not self.session_token:
+            self.send_notification("Требуется вход", "Сначала авторизуйтесь!")
+            return
+        self.generate_report("daily")
+
+    def on_toggle_hud(self, icon, item):
+        self.toggle_hud()
+
+    def on_toggle_api(self, icon, item):
+        self.toggle_api()
 
     def on_scan_now(self, icon, item):
         try:
@@ -694,7 +693,7 @@ class DevCleanerPro:
             raise
 
 
-# --- Диалог завершения процессов (с кнопкой "Запомнить") ---
+# --- Диалог с кнопкой «Запомнить» ---
 class ProcessAlertDialog(QDialog):
     def __init__(self, processes, kill_callback, whitelist_callback, parent=None):
         super().__init__(parent)
