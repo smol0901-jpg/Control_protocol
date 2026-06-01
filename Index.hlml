@@ -1,1322 +1,570 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="DevCleaner Pro v8.3 — интеллектуальная система оптимизации для разработчиков">
-    <title>DevCleaner Pro v8.3 | Интеллектуальная оптимизация разработки</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="NAP Control Protocol — автономная система очистки и оптимизации среды разработки. Премиум-релиз v8.3."/>
+  <meta name="theme-color" content="#0b0b14"/>
+  <title>NAP Control Protocol | DevCleaner Pro v8.3</title>
+  
+  <style>
+    /* ===== DESIGN TOKENS — Clean & Calm ===== */
+    :root{
+      /* Colors — Soft, professional, non-aggressive */
+      --bg-base: #0b0b14;
+      --bg-surface: #141424;
+      --bg-card: #1a1a2e;
+      --text-primary: #f5f5ff;
+      --text-secondary: #b8b8d9;
+      --text-muted: #7a7a9a;
+      --accent: #7c83fd;
+      --accent-soft: rgba(124, 131, 253, 0.15);
+      --border: rgba(140, 150, 200, 0.18);
+      --border-hover: rgba(140, 150, 200, 0.35);
+      --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.35);
+      --shadow-subtle: 0 4px 16px rgba(0, 0, 0, 0.25);
+      
+      /* Spacing — 8px grid system */
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
+      --space-4: 1rem; --space-5: 1.5rem; --space-6: 2rem;
+      --space-7: 3rem; --space-8: 4rem; --space-9: 6rem;
+      
+      /* Typography */
+      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 1rem;
+      --text-lg: 1.125rem; --text-xl: 1.25rem; --text-2xl: 1.5rem;
+      --text-3xl: 2rem; --text-4xl: 2.5rem; --text-5xl: 3.5rem;
+      
+      /* Radius & Transitions */
+      --radius-sm: 10px; --radius-md: 16px; --radius-lg: 24px;
+      --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
     
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
-        
-        :root {
-            --color-bg-primary: #fafafa;
-            --color-bg-secondary: #f0f0f0;
-            --color-bg-tertiary: #e8e8e8;
-            --color-text-primary: #1a1a1a;
-            --color-text-secondary: #4a4a4a;
-            --color-text-tertiary: #717171;
-            --color-accent: #0066cc;
-            --color-accent-light: #3399ff;
-            --color-accent-dark: #004c99;
-            --color-success: #10b981;
-            --color-warning: #f59e0b;
-            --color-error: #ef4444;
-            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
-            --radius-sm: 6px;
-            --radius-md: 10px;
-            --radius-lg: 16px;
-            --radius-xl: 24px;
-            --radius-2xl: 32px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            scroll-padding-top: 100px;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--color-bg-primary);
-            color: var(--color-text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* Animated mesh gradient background */
-        .mesh-gradient {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: 
-                radial-gradient(at 0% 0%, rgba(102, 126, 234, 0.08) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(240, 147, 251, 0.08) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(79, 172, 254, 0.08) 0px, transparent 50%),
-                radial-gradient(at 0% 100%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
-            animation: meshMove 20s ease-in-out infinite;
-        }
-
-        @keyframes meshMove {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -30px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-        }
-
-        /* Noise texture overlay */
-        .noise-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.02;
-            pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-
-        /* Navigation */
-        .nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 1.25rem 2rem;
-            background: rgba(250, 250, 250, 0.8);
-            backdrop-filter: blur(20px) saturate(180%);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            transition: all var(--transition-base);
-        }
-
-        .nav.scrolled {
-            padding: 0.75rem 2rem;
-            background: rgba(250, 250, 250, 0.95);
-            box-shadow: var(--shadow-md);
-        }
-
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: var(--color-text-primary);
-            text-decoration: none;
-            letter-spacing: -0.5px;
-        }
-
-        .nav-brand-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--gradient-primary);
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.25rem;
-            box-shadow: var(--shadow-md);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--color-text-secondary);
-            font-weight: 500;
-            font-size: 0.9375rem;
-            transition: color var(--transition-fast);
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--gradient-primary);
-            transition: width var(--transition-base);
-        }
-
-        .nav-links a:hover {
-            color: var(--color-text-primary);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 8rem 2rem 4rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-content {
-            max-width: 1000px;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1.25rem;
-            background: rgba(102, 126, 234, 0.1);
-            border: 1px solid rgba(102, 126, 234, 0.2);
-            border-radius: 50px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--color-accent);
-            margin-bottom: 2rem;
-            animation: fadeInUp 0.8s ease;
-        }
-
-        .hero-badge::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: var(--color-success);
-            border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.2); }
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 800;
-            line-height: 1.1;
-            letter-spacing: -2px;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-text-secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: fadeInUp 0.8s ease 0.1s both;
-        }
-
-        .hero-subtitle {
-            font-size: 1.25rem;
-            color: var(--color-text-secondary);
-            max-width: 700px;
-            margin: 0 auto 1.5rem;
-            line-height: 1.7;
-            animation: fadeInUp 0.8s ease 0.2s both;
-        }
-
-        .hero-author {
-            font-size: 0.9375rem;
-            color: var(--color-text-tertiary);
-            margin-bottom: 3rem;
-            animation: fadeInUp 0.8s ease 0.3s both;
-        }
-
-        .hero-cta {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            animation: fadeInUp 0.8s ease 0.4s both;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.625rem;
-            padding: 1rem 2rem;
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            border-radius: var(--radius-lg);
-            transition: all var(--transition-base);
-            border: none;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary {
-            background: var(--gradient-primary);
-            color: white;
-            box-shadow: var(--shadow-lg), 0 0 0 0 rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-xl), 0 0 0 8px rgba(102, 126, 234, 0);
-        }
-
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: var(--color-text-primary);
-            border: 1px solid var(--color-bg-tertiary);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .btn-secondary:hover {
-            background: var(--color-bg-secondary);
-            border-color: var(--color-bg-tertiary);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-ghost {
-            background: transparent;
-            color: var(--color-text-secondary);
-            border: 1px solid transparent;
-        }
-
-        .btn-ghost:hover {
-            background: var(--color-bg-secondary);
-            color: var(--color-text-primary);
-            border-color: var(--color-bg-tertiary);
-        }
-
-        /* Section Styles */
-        .section {
-            padding: 6rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            margin-bottom: 4rem;
-            text-align: center;
-        }
-
-        .section-label {
-            display: inline-block;
-            padding: 0.375rem 1rem;
-            background: rgba(102, 126, 234, 0.1);
-            color: var(--color-accent);
-            font-size: 0.875rem;
-            font-weight: 600;
-            border-radius: 50px;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .section-title {
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 800;
-            color: var(--color-text-primary);
-            letter-spacing: -1px;
-            margin-bottom: 1rem;
-        }
-
-        .section-description {
-            font-size: 1.125rem;
-            color: var(--color-text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Cards */
-        .card {
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: 2.5rem;
-            box-shadow: var(--shadow-md);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            transition: all var(--transition-base);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--gradient-primary);
-            transform: scaleX(0);
-            transition: transform var(--transition-base);
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .card-icon {
-            width: 56px;
-            height: 56px;
-            background: var(--gradient-primary);
-            border-radius: var(--radius-lg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.75rem;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--shadow-md);
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--color-text-primary);
-            margin-bottom: 0.75rem;
-            letter-spacing: -0.5px;
-        }
-
-        .card-description {
-            color: var(--color-text-secondary);
-            line-height: 1.7;
-        }
-
-        /* Grid Layouts */
-        .grid {
-            display: grid;
-            gap: 2rem;
-        }
-
-        .grid-2 { grid-template-columns: repeat(2, 1fr); }
-        .grid-3 { grid-template-columns: repeat(3, 1fr); }
-        .grid-4 { grid-template-columns: repeat(4, 1fr); }
-
-        /* Features Grid */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        /* Requirements List */
-        .requirements-list {
-            display: grid;
-            gap: 1rem;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .requirement-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1.25rem 1.5rem;
-            background: white;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-sm);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            transition: all var(--transition-fast);
-        }
-
-        .requirement-item:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateX(4px);
-        }
-
-        .requirement-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(16, 185, 129, 0.1);
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--color-success);
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        .requirement-text {
-            font-weight: 500;
-            color: var(--color-text-primary);
-        }
-
-        /* Installation Cards */
-        .install-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-        }
-
-        .install-card {
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: 2.5rem;
-            box-shadow: var(--shadow-md);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .install-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100px;
-            height: 100px;
-            background: var(--gradient-primary);
-            opacity: 0.05;
-            border-radius: 0 0 0 100%;
-        }
-
-        .install-card-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .install-card-number {
-            width: 48px;
-            height: 48px;
-            background: var(--gradient-primary);
-            border-radius: var(--radius-lg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 1.25rem;
-            flex-shrink: 0;
-        }
-
-        .install-card-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--color-text-primary);
-        }
-
-        .install-steps {
-            list-style: none;
-            counter-reset: step-counter;
-        }
-
-        .install-steps li {
-            counter-increment: step-counter;
-            padding: 0.75rem 0;
-            padding-left: 2.5rem;
-            position: relative;
-            color: var(--color-text-secondary);
-        }
-
-        .install-steps li::before {
-            content: counter(step-counter);
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 28px;
-            height: 28px;
-            background: var(--color-bg-secondary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--color-text-primary);
-        }
-
-        /* Tables */
-        .table-container {
-            background: white;
-            border-radius: var(--radius-xl);
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
-            background: var(--color-bg-secondary);
-        }
-
-        th {
-            padding: 1.25rem 1.5rem;
-            text-align: left;
-            font-weight: 600;
-            color: var(--color-text-primary);
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        td {
-            padding: 1.25rem 1.5rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.04);
-            color: var(--color-text-secondary);
-        }
-
-        tbody tr:hover {
-            background: var(--color-bg-primary);
-        }
-
-        code {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.875em;
-            background: var(--color-bg-secondary);
-            padding: 0.25rem 0.625rem;
-            border-radius: var(--radius-sm);
-            color: var(--color-accent);
-            border: 1px solid rgba(0, 0, 0, 0.06);
-        }
-
-        /* Code Block */
-        .code-block {
-            background: #1e1e2e;
-            border-radius: var(--radius-xl);
-            padding: 2rem;
-            margin: 2rem 0;
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow-xl);
-        }
-
-        .code-block-header {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .code-block-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-
-        .code-block-dot:nth-child(1) { background: #ff5f56; }
-        .code-block-dot:nth-child(2) { background: #ffbd2e; }
-        .code-block-dot:nth-child(3) { background: #27ca40; }
-
-        .code-block pre {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.875rem;
-            line-height: 1.7;
-            color: #a6accd;
-            overflow-x: auto;
-        }
-
-        .code-block .key { color: #7dd3fc; }
-        .code-block .value { color: #fbbf24; }
-        .code-block .bool { color: #34d399; }
-        .code-block .string { color: #f472b6; }
-
-        /* Tech Stack */
-        .tech-stack {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            justify-content: center;
-        }
-
-        .tech-item {
-            padding: 0.625rem 1.25rem;
-            background: white;
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 50px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: var(--color-text-secondary);
-            transition: all var(--transition-fast);
-        }
-
-        .tech-item:hover {
-            background: var(--color-bg-secondary);
-            border-color: var(--color-accent);
-            color: var(--color-accent);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        /* CTA Section */
-        .cta-section {
-            background: var(--gradient-primary);
-            border-radius: var(--radius-2xl);
-            padding: 5rem 3rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow-2xl);
-        }
-
-        .cta-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
-            animation: rotate 30s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .cta-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .cta-title {
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 800;
-            color: white;
-            margin-bottom: 1rem;
-            letter-spacing: -1px;
-        }
-
-        .cta-description {
-            font-size: 1.125rem;
-            color: rgba(255, 255, 255, 0.9);
-            max-width: 600px;
-            margin: 0 auto 2.5rem;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn-white {
-            background: white;
-            color: var(--color-accent);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .btn-white:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .btn-outline-white {
-            background: transparent;
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .btn-outline-white:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: white;
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--color-text-primary);
-            color: rgba(255, 255, 255, 0.7);
-            padding: 4rem 2rem 2rem;
-            margin-top: 6rem;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .footer-text {
-            margin-bottom: 1.5rem;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color var(--transition-fast);
-        }
-
-        .footer-links a:hover {
-            color: white;
-        }
-
-        .footer-bottom {
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.875rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .grid-4 { grid-template-columns: repeat(2, 1fr); }
-            .grid-3 { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-            .install-grid { grid-template-columns: 1fr; }
-            .hero-cta { flex-direction: column; align-items: stretch; }
-            .btn { width: 100%; justify-content: center; }
-            .section { padding: 4rem 1.5rem; }
-        }
-
-        /* Scroll animations */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Divider */
-        .divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--color-bg-tertiary), transparent);
-            margin: 4rem 0;
-            position: relative;
-        }
-
-        .divider::before {
-            content: '✦';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--color-bg-primary);
-            padding: 0 1.5rem;
-            color: var(--color-accent);
-            font-size: 1.25rem;
-        }
-
-        /* Info Box */
-        .info-box {
-            background: white;
-            border-left: 4px solid var(--color-accent);
-            padding: 1.5rem 2rem;
-            border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
-            margin: 2rem 0;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .info-box strong {
-            color: var(--color-text-primary);
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        .info-box code {
-            background: var(--color-bg-secondary);
-            padding: 0.25rem 0.5rem;
-            border-radius: var(--radius-sm);
-        }
-    </style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body{
+      font-family: var(--font-main);
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    
+    /* ===== HIGH-DPI SUPPORT ===== */
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+      body { image-rendering: -webkit-optimize-contrast; }
+    }
+    
+    /* ===== SUBTLE PARALLAX — 4 Layers, Calm ===== */
+    .parallax{
+      position: fixed; inset: 0; pointer-events: none; z-index: -1;
+      transform-style: preserve-3d;
+    }
+    .parallax__layer{
+      position: absolute; inset: 0; background-size: cover; background-position: center;
+      will-change: transform; transition: transform 0.1s linear;
+    }
+    .layer-1{ /* Deep background */
+      background: radial-gradient(1000px 500px at 20% -10%, rgba(124,131,253,0.06), transparent 60%),
+                  radial-gradient(800px 400px at 80% 110%, rgba(124,131,253,0.04), transparent 55%),
+                  linear-gradient(180deg, var(--bg-base) 0%, #0e0e1a 50%, var(--bg-base) 100%);
+      transform: translateZ(-3px) scale(3);
+    }
+    .layer-2{ /* Subtle grid */
+      background-image:
+        linear-gradient(rgba(140,150,200,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(140,150,200,0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
+      transform: translateZ(-2px) scale(2.2);
+      opacity: 0.6;
+    }
+    .layer-3{ /* Soft nodes */
+      background: transparent;
+      transform: translateZ(-1px) scale(1.6);
+    }
+    .layer-4{ /* Gentle glow */
+      background: radial-gradient(500px 250px at 30% 70%, rgba(124,131,253,0.05), transparent 70%);
+      transform: translateZ(-0.5px) scale(1.3);
+      animation: glowGentle 16s ease-in-out infinite;
+    }
+    @keyframes glowGentle{
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.75; }
+    }
+    
+    /* ===== PARTICLES — Minimal & Crisp ===== */
+    #particles{
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    }
+    .particle{
+      position: absolute; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.95), rgba(124,131,253,0.4));
+      box-shadow: 0 0 8px rgba(124,131,253,0.3);
+      will-change: transform;
+    }
+    
+    /* ===== LAYOUT — Symmetrical & Centered ===== */
+    .wrapper{
+      position: relative; z-index: 10;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center;
+    }
+    
+    /* ===== HEADER — Clean & Balanced ===== */
+    .header{
+      position: sticky; top: 0; z-index: 100;
+      width: 100%; max-width: 1200px;
+      padding: var(--space-4) var(--space-5);
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(11, 11, 20, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      transition: all var(--transition);
+    }
+    .header.scrolled { padding: var(--space-3) var(--space-5); }
+    
+    .logo{
+      display: flex; align-items: center; gap: var(--space-3);
+      text-decoration: none; color: inherit;
+    }
+    .logo__icon{
+      width: 32px; height: 32px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), #9a9ffd);
+      display: grid; place-items: center;
+      font-weight: 700; font-size: 0.9rem; color: #fff;
+      box-shadow: 0 4px 12px rgba(124,131,253,0.3);
+    }
+    .logo__text{ font-weight: 600; font-size: var(--text-lg); letter-spacing: -0.01em; }
+    .logo__badge{
+      font-size: var(--text-xs); padding: 2px 8px;
+      background: var(--accent-soft); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--accent); font-weight: 500;
+    }
+    
+    .nav{ display: flex; gap: var(--space-2); }
+    .nav__link{
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary); text-decoration: none;
+      font-size: var(--text-sm); font-weight: 500;
+      transition: all var(--transition);
+    }
+    .nav__link:hover, .nav__link.active{
+      color: var(--text-primary); background: var(--accent-soft);
+    }
+    
+    /* ===== HERO — Centered & Harmonious ===== */
+    .hero{
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      padding: var(--space-8) var(--space-5) var(--space-7);
+      width: 100%; max-width: 1200px;
+    }
+    .hero__content{
+      text-align: center; max-width: 720px; width: 100%;
+      animation: fadeIn 0.7s ease-out both;
+    }
+    @keyframes fadeIn{
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .hero__badge{
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      padding: 6px 14px; border-radius: 999px;
+      background: var(--accent-soft); border: 1px solid var(--border);
+      font-size: var(--text-sm); font-weight: 500; color: var(--text-secondary);
+      margin-bottom: var(--space-5);
+    }
+    
+    .hero__title{
+      font-size: clamp(var(--text-3xl), 6vw, var(--text-5xl));
+      font-weight: 700; line-height: 1.1; margin-bottom: var(--space-4);
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, #c8cbff 50%, var(--accent) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero__subtitle{
+      font-size: var(--text-lg); color: var(--text-secondary);
+      max-width: 580px; margin: 0 auto var(--space-6);
+      font-weight: 400; line-height: 1.55;
+    }
+    
+    /* ===== FEATURES — EXACT 2×2 GRID, SYMMETRICAL ===== */
+    .features{
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); /* Exactly 2 columns */
+      gap: var(--space-5);
+      width: 100%; max-width: 720px; margin: 0 auto;
+    }
+    .feature{
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-5);
+      text-align: left;
+      transition: all var(--transition);
+      display: flex; flex-direction: column; gap: var(--space-3);
+    }
+    .feature:hover{
+      border-color: var(--border-hover);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-subtle);
+    }
+    
+    .feature__icon{
+      width: 40px; height: 40px; border-radius: 10px;
+      background: var(--accent-soft);
+      display: grid; place-items: center;
+      font-size: 1.2rem; flex-shrink: 0;
+    }
+    .feature__title{
+      font-size: var(--text-base); font-weight: 600; color: var(--text-primary);
+    }
+    .feature__desc{
+      font-size: var(--text-sm); color: var(--text-muted);
+      line-height: 1.5;
+    }
+    
+    /* ===== CTA — Balanced Buttons ===== */
+    .cta{
+      display: flex; gap: var(--space-3); justify-content: center;
+      margin-top: var(--space-7); flex-wrap: wrap;
+    }
+    .btn{
+      padding: 12px 28px; border-radius: 999px;
+      font-weight: 600; font-size: var(--text-sm);
+      text-decoration: none; display: inline-flex;
+      align-items: center; gap: var(--space-2);
+      transition: all var(--transition); border: none; cursor: pointer;
+    }
+    .btn--primary{
+      background: linear-gradient(135deg, var(--accent), #9a9ffd);
+      color: #fff; box-shadow: 0 6px 20px rgba(124,131,253,0.35);
+    }
+    .btn--primary:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(124,131,253,0.5);
+    }
+    .btn--secondary{
+      background: transparent; color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+    .btn--secondary:hover{
+      background: var(--accent-soft); border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+    
+    /* ===== ROLES — Clean Tags ===== */
+    .roles{
+      display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2);
+      margin-top: var(--space-6); padding-top: var(--space-5);
+      border-top: 1px dashed var(--border);
+    }
+    .role{
+      padding: 4px 10px; border-radius: 6px;
+      background: rgba(140,150,200,0.08);
+      border: 1px solid var(--border);
+      font-size: var(--text-xs); color: var(--text-muted);
+      font-weight: 500; transition: all var(--transition);
+    }
+    .role:hover{
+      background: var(--accent-soft); color: var(--text-secondary);
+      transform: translateY(-1px);
+    }
+    
+    /* ===== FOOTER — Minimal & Centered ===== */
+    .footer{
+      padding: var(--space-5) var(--space-4);
+      text-align: center; color: var(--text-muted);
+      font-size: var(--text-sm); border-top: 1px solid var(--border);
+      width: 100%; max-width: 1200px;
+    }
+    .footer a{ color: var(--accent); text-decoration: none; transition: color var(--transition); }
+    .footer a:hover{ color: var(--text-primary); }
+    .footer__meta{
+      margin-top: var(--space-2); font-size: var(--text-xs);
+      font-family: var(--font-mono); opacity: 0.9;
+    }
+    
+    /* ===== ACCESSIBILITY ===== */
+    :focus-visible{
+      outline: 2px solid var(--accent); outline-offset: 2px;
+      border-radius: 4px;
+    }
+    @media (prefers-reduced-motion: reduce){
+      *, *::before, *::after{
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+    
+    /* ===== RESPONSIVE — Symmetrical on all screens ===== */
+    @media (max-width: 768px){
+      .features{ grid-template-columns: 1fr; } /* Stack on mobile */
+      .hero{ padding: var(--space-6) var(--space-4) var(--space-5); }
+      .header{ padding: var(--space-3) var(--space-4); }
+      .cta{ flex-direction: column; align-items: center; }
+      .btn{ width: 100%; max-width: 280px; justify-content: center; }
+    }
+    
+    /* ===== PRINT — Crisp output ===== */
+    @media print{
+      .parallax, #particles{ display: none; }
+      body{ background: #fff; color: #000; }
+      .feature{ break-inside: avoid; border: 1px solid #ccc; }
+    }
+  </style>
 </head>
 <body>
-    <div class="mesh-gradient"></div>
-    <div class="noise-overlay"></div>
-
-    <!-- Navigation -->
-    <nav class="nav" id="nav">
-        <div class="nav-container">
-            <a href="#" class="nav-brand">
-                <div class="nav-brand-icon">⚡</div>
-                <span>DevCleaner Pro</span>
-            </a>
-            <ul class="nav-links">
-                <li><a href="#features">Возможности</a></li>
-                <li><a href="#api">API</a></li>
-                <li><a href="#install">Установка</a></li>
-                <li><a href="#config">Настройка</a></li>
-                <li><a href="#download">Скачать</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-badge">v8.3.0 Stable Release</div>
-            <h1>DevCleaner Pro</h1>
-            <p class="hero-subtitle">
-                Автономный инструмент для мониторинга и оптимизации dev-процессов на Windows с ML-анализом
-            </p>
-            <p class="hero-author">Автор: NEURAL ARCHITECT PREMIUM++</p>
-            <div class="hero-cta">
-                <a href="https://github.com/smol0901-jpg/Control_protocol/releases/download/NAP_Control_protocol/NEURAL_ARCHTECT_PREMIUM++_v8.3_Setup.exe" class="btn btn-primary">
-                    ⬇ Скачать установщик
-                </a>
-                <a href="https://github.com/smol0901-jpg/Control_protocol/releases/download/NAP_Control_protocol/DevCleanerPro_Portable_v8.3.zip" class="btn btn-secondary">
-                    📦 Портативная версия
-                </a>
-                <a href="https://github.com/smol0901-jpg/Control_protocol" class="btn btn-ghost">
-                    🐙 GitHub
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- What is it -->
-    <section class="section">
-        <div class="section-header reveal">
-            <span class="section-label">О продукте</span>
-            <h2 class="section-title">Что это?</h2>
-        </div>
-        <div class="card reveal">
-            <p style="font-size: 1.125rem; line-height: 1.8; color: var(--color-text-secondary); margin-bottom: 1rem;">
-                DevCleaner Pro — это утилита для разработчиков, которая отслеживает процессы в реальном времени, 
-                помогает освобождать ресурсы и поддерживать порядок в системе.
-            </p>
-            <p style="font-size: 1.125rem; line-height: 1.8; color: var(--color-text-secondary);">
-                Программа автоматически находит «тяжёлые» процессы (Node.js, Python, Java, PowerShell, компиляторы), 
-                анализирует их влияние на систему и предлагает завершить. Использует ML-модель для оценки 
-                безопасности завершения.
-            </p>
-        </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- Features -->
-    <section class="section" id="features">
-        <div class="section-header reveal">
-            <span class="section-label">Функционал</span>
-            <h2 class="section-title">Возможности</h2>
-            <p class="section-description">
-                Полный набор инструментов для эффективной оптимизации вашей системы
-            </p>
-        </div>
-        <div class="features-grid">
-            <div class="card reveal">
-                <div class="card-icon">📊</div>
-                <h3 class="card-title">Мониторинг процессов</h3>
-                <p class="card-description">Отслеживает dev-процессы, анализирует нагрузку на CPU и память</p>
-            </div>
-            <div class="card reveal">
-                <div class="card-icon">🤖</div>
-                <h3 class="card-title">ML-анализ</h3>
-                <p class="card-description">Модель Random Forest предсказывает безопасность завершения процессов</p>
-            </div>
-            <div class="card reveal">
-                <div class="card-icon">🗑️</div>
-                <h3 class="card-title">Очистка кэшей</h3>
-                <p class="card-description">Удаляет временные файлы npm, pip, Yarn, Gradle, Maven, VS Code</p>
-            </div>
-            <div class="card reveal">
-                <div class="card-icon">📄</div>
-                <h3 class="card-title">PDF-отчёты</h3>
-                <p class="card-description">Создаёт отчёты с графиками, статистикой и рекомендациями</p>
-            </div>
-            <div class="card reveal">
-                <div class="card-icon">📺</div>
-                <h3 class="card-title">HUD с графиками</h3>
-                <p class="card-description">Отдельное окно с графиками CPU и памяти в реальном времени</p>
-            </div>
-            <div class="card reveal">
-                <div class="card-icon">🌐</div>
-                <h3 class="card-title">HTTP API</h3>
-                <p class="card-description">Управление программой через REST API на порту 5050</p>
-            </div>
-            <div class="card reveal">
-                <div class="card-icon">⚡</div>
-                <h3 class="card-title">Лёгкий режим</h3>
-                <p class="card-description">Отключает автообучение ML для экономии ресурсов</p>
-            </div>
-            <div class="card reveal">
-                <div class="card-icon">🛡️</div>
-                <h3 class="card-title">Белый список</h3>
-                <p class="card-description">Важные процессы можно добавить в исключения</p>
-            </div>
-        </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- System Requirements -->
-    <section class="section">
-        <div class="section-header reveal">
-            <span class="section-label">Требования</span>
-            <h2 class="section-title">Системные требования</h2>
-        </div>
-        <div class="requirements-list reveal">
-            <div class="requirement-item">
-                <div class="requirement-icon">✓</div>
-                <div class="requirement-text">ОС: Windows 10 / 11 (64‑бит)</div>
-            </div>
-            <div class="requirement-item">
-                <div class="requirement-icon">✓</div>
-                <div class="requirement-text">Процессор: Intel Celeron N4120 или аналогичный</div>
-            </div>
-            <div class="requirement-item">
-                <div class="requirement-icon">✓</div>
-                <div class="requirement-text">ОЗУ: 8 ГБ (рекомендуется)</div>
-            </div>
-            <div class="requirement-item">
-                <div class="requirement-icon">✓</div>
-                <div class="requirement-text">Диск: ~500 МБ свободного места</div>
-            </div>
-            <div class="requirement-item">
-                <div class="requirement-icon">✓</div>
-                <div class="requirement-text">Права: Администратор (для завершения процессов)</div>
-            </div>
-        </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- Installation -->
-    <section class="section" id="install">
-        <div class="section-header reveal">
-            <span class="section-label">Начало работы</span>
-            <h2 class="section-title">Установка</h2>
-        </div>
-        <div class="install-grid">
-            <div class="install-card reveal">
-                <div class="install-card-header">
-                    <div class="install-card-number">1</div>
-                    <h3 class="install-card-title">Установщик</h3>
-                </div>
-                <ol class="install-steps">
-                    <li>Скачайте <code>NEURAL_ARCHTECT_PREMIUM++_v8.3_Setup.exe</code></li>
-                    <li>Запустите файл и следуйте инструкциям мастера</li>
-                    <li>После установки программа добавится в автозагрузку</li>
-                </ol>
-            </div>
-            <div class="install-card reveal">
-                <div class="install-card-header">
-                    <div class="install-card-number">2</div>
-                    <h3 class="install-card-title">Портативная версия</h3>
-                </div>
-                <ol class="install-steps">
-                    <li>Скачайте <code>DevCleanerPro_Portable_v8.3.zip</code></li>
-                    <li>Распакуйте в любую папку</li>
-                    <li>Запустите <code>DevCleanerPro.exe</code></li>
-                </ol>
-            </div>
-        </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- Usage -->
-    <section class="section">
-        <div class="section-header reveal">
-            <span class="section-label">Руководство</span>
-            <h2 class="section-title">Использование</h2>
-        </div>
-        <div class="info-box reveal">
-            <strong>После запуска</strong>
-            <p style="color: var(--color-text-secondary); margin-top: 0.5rem;">
-                В системном трее появляется зелёная иконка. Нажмите правой кнопкой для доступа к меню.
-            </p>
+  <!-- ===== PARALLAX LAYERS (Subtle, 4 layers) ===== -->
+  <div class="parallax" aria-hidden="true">
+    <div class="parallax__layer layer-1"></div>
+    <div class="parallax__layer layer-2"></div>
+    <div class="parallax__layer layer-3" id="node-layer"></div>
+    <div class="parallax__layer layer-4"></div>
+  </div>
+  <canvas id="particles"></canvas>
+  
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="wrapper">
+    <!-- Header -->
+    <header class="header">
+      <a href="#" class="logo">
+        <div class="logo__icon">N</div>
+        <span class="logo__text">NAP Protocol</span>
+        <span class="logo__badge">v8.3</span>
+      </a>
+      <nav class="nav">
+        <a href="#features" class="nav__link active">Возможности</a>
+        <a href="https://github.com/smol0901-jpg/Control_protocol/releases/tag/NAP_Control_protocol" class="nav__link" target="_blank" rel="noopener">Релиз</a>
+        <a href="https://github.com/smol0901-jpg/Control_protocol" class="nav__link" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </header>
+    
+    <!-- Hero + Features (2×2 Grid) -->
+    <main class="hero">
+      <div class="hero__content">
+        <div class="hero__badge">✨ DevCleaner Pro • Премиум</div>
+        <h1 class="hero__title">NAP Control Protocol</h1>
+        <p class="hero__subtitle">Автономный интеллект для очистки и оптимизации среды разработки. Умный мониторинг • Машинное обучение • Мгновенные отчёты</p>
+        
+        <!-- EXACT 2×2 GRID — Symmetrical & Harmonious -->
+        <div class="features" id="features">
+          <article class="feature">
+            <div class="feature__icon">🧠</div>
+            <h3 class="feature__title">ML-анализ процессов</h3>
+            <p class="feature__desc">Random Forest предсказывает безопасные для завершения процессы на основе 50+ метрик</p>
+          </article>
+          <article class="feature">
+            <div class="feature__icon">⚡</div>
+            <h3 class="feature__title">Авто-очистка кэшей</h3>
+            <p class="feature__desc">npm, pip, Gradle, VS Code — интеллектуальное освобождение места без риска</p>
+          </article>
+          <article class="feature">
+            <div class="feature__icon">📊</div>
+            <h3 class="feature__title">PDF-отчёты Pro</h3>
+            <p class="feature__desc">Профессиональные дашборды с графиками, рекомендациями и историей оптимизаций</p>
+          </article>
+          <article class="feature">
+            <div class="feature__icon">🔌</div>
+            <h3 class="feature__title">REST API v2</h3>
+            <p class="feature__desc">Удалённое управление через защищённый HTTP-интерфейс с JWT-аутентификацией</p>
+          </article>
         </div>
         
-        <h3 style="font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-text-primary);">Пункты меню</h3>
-        <div class="table-container reveal">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Пункт меню</th>
-                        <th>Описание</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>👤 <strong>Войти</strong></td><td>Авторизация (admin / admin123!)</td></tr>
-                    <tr><td>📊 <strong>Статистика</strong></td><td>Сводка по убитым процессам и очищенной памяти</td></tr>
-                    <tr><td>🖥️ <strong>Главное окно</strong></td><td>Полный интерфейс с вкладками</td></tr>
-                    <tr><td>🔍 <strong>Сканировать сейчас</strong></td><td>Поиск тяжёлых процессов</td></tr>
-                    <tr><td>📄 <strong>Создать отчёт</strong></td><td>Генерация PDF-отчёта</td></tr>
-                    <tr><td>📺 <strong>HUD с графиками</strong></td><td>Открыть окно с графиками</td></tr>
-                    <tr><td>⚡ <strong>Лёгкий режим</strong></td><td>Экономия ресурсов</td></tr>
-                    <tr><td>🌐 <strong>API Сервер</strong></td><td>Включить HTTP API</td></tr>
-                    <tr><td>❌ <strong>Выход</strong></td><td>Закрыть программу</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- API -->
-    <section class="section" id="api">
-        <div class="section-header reveal">
-            <span class="section-label">Интеграция</span>
-            <h2 class="section-title">HTTP API</h2>
-        </div>
-        <div class="info-box reveal">
-            <strong>Базовый URL:</strong>
-            <code style="margin-left: 0.5rem;">http://127.0.0.1:5050/api</code>
+        <!-- CTA Buttons -->
+        <div class="cta">
+          <a href="https://github.com/smol0901-jpg/Control_protocol/releases/tag/NAP_Control_protocol" class="btn btn--primary" target="_blank" rel="noopener">⬇️ Скачать релиз</a>
+          <a href="https://github.com/smol0901-jpg/Control_protocol" class="btn btn--secondary" target="_blank" rel="noopener">📁 Исходный код</a>
         </div>
         
-        <h3 style="font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-text-primary);">Эндпоинты</h3>
-        <div class="table-container reveal">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Метод</th>
-                        <th>Эндпоинт</th>
-                        <th>Описание</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td><code>POST</code></td><td><code>/login</code></td><td>Получить токен</td></tr>
-                    <tr><td><code>GET</code></td><td><code>/processes</code></td><td>Список dev-процессов</td></tr>
-                    <tr><td><code>POST</code></td><td><code>/kill/&lt;pid&gt;</code></td><td>Завершить процесс</td></tr>
-                    <tr><td><code>POST</code></td><td><code>/kill_all</code></td><td>Завершить все безопасные процессы</td></tr>
-                    <tr><td><code>POST</code></td><td><code>/clean_cache</code></td><td>Очистить кэши разработки</td></tr>
-                    <tr><td><code>GET</code></td><td><code>/stats</code></td><td>Статистика системы</td></tr>
-                    <tr><td><code>GET</code></td><td><code>/report?type=daily</code></td><td>Сгенерировать отчёт</td></tr>
-                </tbody>
-            </table>
+        <!-- Team Roles (Clean Tags) -->
+        <div class="roles">
+          <span class="role">UI/UX</span>
+          <span class="role">Frontend</span>
+          <span class="role">Backend</span>
+          <span class="role">Analyst</span>
+          <span class="role">QA</span>
+          <span class="role">SEO</span>
+          <span class="role">Copy</span>
+          <span class="role">Content</span>
+          <span class="role">PM</span>
+          <span class="role">DevOps</span>
         </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- Configuration -->
-    <section class="section" id="config">
-        <div class="section-header reveal">
-            <span class="section-label">Конфигурация</span>
-            <h2 class="section-title">Настройка</h2>
-        </div>
-        <div class="info-box reveal">
-            <strong>Файл конфигурации:</strong>
-            <code style="margin-left: 0.5rem;">C:\Users\&lt;Имя&gt;\.devcleaner_pro\config.json</code>
-        </div>
-        
-        <div class="code-block reveal">
-            <div class="code-block-header">
-                <div class="code-block-dot"></div>
-                <div class="code-block-dot"></div>
-                <div class="code-block-dot"></div>
-            </div>
-            <pre>{
-  <span class="key">"alert_memory_mb"</span>: <span class="value">500</span>,
-  <span class="key">"alert_cpu_percent"</span>: <span class="value">80</span>,
-  <span class="key">"auto_kill"</span>: <span class="bool">false</span>,
-  <span class="key">"scan_interval_seconds"</span>: <span class="value">30</span>,
-  <span class="key">"auto_report_interval_hours"</span>: <span class="value">24</span>,
-  <span class="key">"api_enabled"</span>: <span class="bool">false</span>,
-  <span class="key">"process_whitelist"</span>: []
-}</pre>
-        </div>
-
-        <div class="grid grid-2" style="margin-top: 2rem;">
-            <div class="card reveal">
-                <h3 class="card-title">alert_memory_mb / alert_cpu_percent</h3>
-                <p class="card-description">Пороги для уведомлений о тяжёлых процессах</p>
-            </div>
-            <div class="card reveal">
-                <h3 class="card-title">auto_kill</h3>
-                <p class="card-description">Автоматическое завершение безопасных процессов</p>
-            </div>
-            <div class="card reveal">
-                <h3 class="card-title">scan_interval_seconds</h3>
-                <p class="card-description">Интервал сканирования процессов</p>
-            </div>
-            <div class="card reveal">
-                <h3 class="card-title">api_enabled</h3>
-                <p class="card-description">Включение API при старте программы</p>
-            </div>
-            <div class="card reveal" style="grid-column: 1 / -1;">
-                <h3 class="card-title">process_whitelist</h3>
-                <p class="card-description">Список игнорируемых процессов</p>
-            </div>
-        </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- Logs & Tech -->
-    <section class="section">
-        <div class="section-header reveal">
-            <span class="section-label">Техническая информация</span>
-            <h2 class="section-title">Логи и технологии</h2>
-        </div>
-        
-        <h3 style="font-size: 1.5rem; font-weight: 700; margin: 2rem 0 1rem; color: var(--color-text-primary);">📁 Логи</h3>
-        <div class="info-box reveal">
-            <strong>Путь:</strong>
-            <code style="margin-left: 0.5rem;">C:\Users\&lt;Имя&gt;\.devcleaner_pro\error_logs\</code>
-        </div>
-        <div class="requirements-list reveal" style="margin-top: 1.5rem;">
-            <div class="requirement-item">
-                <div class="requirement-icon">✓</div>
-                <div class="requirement-text">Все события записываются в структурированные логи</div>
-            </div>
-            <div class="requirement-item">
-                <div class="requirement-icon">✓</div>
-                <div class="requirement-text">Автоматическая ротация: 1000 строк на файл</div>
-            </div>
-            <div class="requirement-item">
-                <div class="requirement-icon">✓</div>
-                <div class="requirement-text">Общий объём не более 100 МБ</div>
-            </div>
-        </div>
-
-        <h3 style="font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-text-primary);">🛠️ Технологический стек</h3>
-        <div class="tech-stack reveal">
-            <span class="tech-item">Python 3.10+</span>
-            <span class="tech-item">PyQt5</span>
-            <span class="tech-item">scikit-learn</span>
-            <span class="tech-item">pandas</span>
-            <span class="tech-item">numpy</span>
-            <span class="tech-item">Flask</span>
-            <span class="tech-item">reportlab</span>
-            <span class="tech-item">psutil</span>
-            <span class="tech-item">pystray</span>
-        </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="section" id="download">
-        <div class="cta-section reveal">
-            <div class="cta-content">
-                <h2 class="cta-title">📦 Скачать последнюю версию</h2>
-                <p class="cta-description">
-                    DevCleaner Pro — ваш заботливый оркестр для чистоты и порядка в процессах разработки.
-                </p>
-                <div class="cta-buttons">
-                    <a href="https://github.com/smol0901-jpg/Control_protocol/releases/download/NAP_Control_protocol/NEURAL_ARCHTECT_PREMIUM++_v8.3_Setup.exe" class="btn btn-white">
-                        ⬇ Установщик
-                    </a>
-                    <a href="https://github.com/smol0901-jpg/Control_protocol/releases/download/NAP_Control_protocol/DevCleanerPro_Portable_v8.3.zip" class="btn btn-outline-white">
-                        📦 Портативная
-                    </a>
-                    <a href="https://github.com/smol0901-jpg/Control_protocol" class="btn btn-outline-white">
-                        🐙 GitHub
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
+      </div>
+    </main>
+    
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-content">
-            <p class="footer-text">© 2026 NEURAL ARCHITECT PREMIUM++</p>
-            <p class="footer-text">Лицензия MIT. Бесплатно для личного и коммерческого использования</p>
-            <div class="footer-links">
-                <a href="https://github.com/smol0901-jpg/Control_protocol">GitHub репозиторий</a>
-                <a href="https://github.com/smol0901-jpg/Control_protocol/releases">Releases</a>
-                <a href="#features">Документация</a>
-            </div>
-            <div class="footer-bottom">
-                <p>Сделано с вниманием к деталям</p>
-            </div>
-        </div>
+      <p>© 2026 <strong>NAP Protocol</strong> • Автор: <a href="https://vk.com/smolyaninovchef" target="_blank" rel="noopener">Смолянинов Александр</a></p>
+      <p class="footer__meta">DevCleaner Pro • Windows • Python 3.10+ • MIT License</p>
     </footer>
-
-    <script>
-        // Navigation scroll effect
-        const nav = document.getElementById('nav');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
+  </div>
+  
+  <!-- ===== PHYSICS ENGINE — Crisp & Subtle ===== -->
+  <script>
+    (function(){
+      'use strict';
+      
+      // Config — Calm & Performant
+      const CFG = {
+        particleCount: Math.min(35, Math.floor(window.innerWidth / 30)),
+        particleSize: {min: 1, max: 3},
+        particleSpeed: {min: 0.15, max: 0.4},
+        connectionDist: 100,
+        mouseRadius: 120,
+        parallaxSpeed: [0.08, 0.14, 0.22, 0.35],
+        colors: ['rgba(124,131,253,0.9)', 'rgba(154,159,253,0.85)', 'rgba(200,205,255,0.8)']
+      };
+      
+      const state = {
+        particles: [], mouse: {x: null, y: null},
+        canvas: null, ctx: null,
+        dpr: Math.min(2, window.devicePixelRatio || 1),
+        w: 0, h: 0, last: 0
+      };
+      
+      const U = {
+        rand: (min, max) => Math.random() * (max - min) + min,
+        dist: (x1,y1,x2,y2) => Math.hypot(x2-x1, y2-y1),
+        throttle: (fn, ms) => {
+          let t = 0; return (...a) => {
+            const now = Date.now();
+            if(now - t >= ms){ t = now; fn.apply(this, a); }
+          };
+        }
+      };
+      
+      class Particle{
+        constructor(x, y){
+          this.x = x ?? U.rand(0, state.w);
+          this.y = y ?? U.rand(0, state.h);
+          this.vx = U.rand(-0.2, 0.2); this.vy = U.rand(-0.2, 0.2);
+          this.size = U.rand(CFG.particleSize.min, CFG.particleSize.max);
+          this.speed = U.rand(CFG.particleSpeed.min, CFG.particleSpeed.max);
+          this.color = CFG.colors[Math.floor(U.rand(0, CFG.colors.length))];
+        }
+        update(dt){
+          if(state.mouse.x !== null){
+            const dx = state.mouse.x - this.x, dy = state.mouse.y - this.y;
+            const d = Math.hypot(dx, dy);
+            if(d < CFG.mouseRadius && d > 8){
+              const f = (CFG.mouseRadius - d) / CFG.mouseRadius * 0.015;
+              this.vx += (dx/d) * f; this.vy += (dy/d) * f;
             }
-        });
-
-        // Scroll reveal animation
-        const reveals = document.querySelectorAll('.reveal');
-        const revealOnScroll = () => {
-            reveals.forEach(element => {
-                const elementTop = element.getBoundingClientRect().top;
-                const windowHeight = window.innerHeight;
-                if (elementTop < windowHeight - 100) {
-                    element.classList.add('active');
-                }
-            });
-        };
-
-        window.addEventListener('scroll', revealOnScroll);
-        window.addEventListener('load', revealOnScroll);
-
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-    </script>
+          }
+          this.x += this.vx * this.speed * dt;
+          this.y += this.vy * this.speed * dt;
+          this.vx *= 0.998; this.vy *= 0.998;
+          if(this.x < -10) this.x = state.w + 10;
+          if(this.x > state.w + 10) this.x = -10;
+          if(this.y < -10) this.y = state.h + 10;
+          if(this.y > state.h + 10) this.y = -10;
+        }
+        draw(ctx){
+          ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+          ctx.fillStyle = this.color; ctx.fill();
+        }
+      }
+      
+      function drawLinks(ctx, particles){
+        ctx.strokeStyle = 'rgba(140,150,200,0.12)'; ctx.lineWidth = 0.5;
+        for(let i=0; i<particles.length; i++){
+          for(let j=i+1; j<particles.length; j++){
+            const p1=particles[i], p2=particles[j];
+            const d = U.dist(p1.x,p1.y, p2.x,p2.y);
+            if(d < CFG.connectionDist){
+              ctx.globalAlpha = (1 - d/CFG.connectionDist) * 0.3;
+              ctx.beginPath(); ctx.moveTo(p1.x,p1.y); ctx.lineTo(p2.x,p2.y); ctx.stroke();
+            }
+          }
+        }
+        ctx.globalAlpha = 1;
+      }
+      
+      function setupCanvas(){
+        state.canvas = document.getElementById('particles');
+        state.ctx = state.canvas.getContext('2d', {alpha:true, desynchronized:true});
+        resize();
+        window.addEventListener('resize', U.throttle(resize, 200));
+      }
+      
+      function resize(){
+        state.w = window.innerWidth; state.h = window.innerHeight;
+        state.canvas.width = state.w * state.dpr;
+        state.canvas.height = state.h * state.dpr;
+        state.canvas.style.width = state.w+'px'; state.canvas.style.height = state.h+'px';
+        state.ctx.scale(state.dpr, state.dpr);
+        initParticles(true);
+      }
+      
+      function initParticles(force){
+        if(force || !state.particles.length){
+          state.particles = [];
+          for(let i=0; i<CFG.particleCount; i++) state.particles.push(new Particle());
+        }
+      }
+      
+      function loop(ts){
+        const dt = Math.min(2, (ts - state.last) / 16.67); state.last = ts;
+        const ctx = state.ctx; ctx.clearRect(0,0,state.w,state.h);
+        state.particles.forEach(p => { p.update(dt); p.draw(ctx); });
+        drawLinks(ctx, state.particles);
+        while(state.particles.length < CFG.particleCount) state.particles.push(new Particle());
+        requestAnimationFrame(loop);
+      }
+      
+      function initParallax(){
+        const layers = document.querySelectorAll('.parallax__layer');
+        const onScroll = U.throttle(() => {
+          const y = window.pageYOffset;
+          layers.forEach((l, i) => {
+            l.style.transform = `translate3d(0, ${y * CFG.parallaxSpeed[i]}px, 0) scale(${1 + i*0.3})`;
+          });
+        }, 16);
+        window.addEventListener('scroll', onScroll, {passive:true});
+        onScroll();
+      }
+      
+      function initMouse(){
+        const onMove = U.throttle(e => {
+          state.mouse.x = e.clientX; state.mouse.y = e.clientY;
+        }, 40);
+        window.addEventListener('mousemove', onMove, {passive:true});
+        window.addEventListener('mouseleave', () => { state.mouse.x = state.mouse.y = null; });
+      }
+      
+      function initHeader(){
+        const h = document.querySelector('.header');
+        const onScroll = U.throttle(() => {
+          h.classList.toggle('scrolled', window.scrollY > 40);
+        }, 100);
+        window.addEventListener('scroll', onScroll, {passive:true});
+      }
+      
+      function init(){
+        setupCanvas(); initParallax(); initMouse(); initParticles(); initHeader();
+        requestAnimationFrame(loop);
+        // Smooth reveal
+        const content = document.querySelector('.hero__content');
+        if(content){ content.style.opacity='0'; content.style.transform='translateY(12px)';
+          setTimeout(()=>{ content.style.transition='opacity 0.6s ease, transform 0.6s ease';
+            content.style.opacity='1'; content.style.transform='translateY(0)'; }, 150);
+        }
+      }
+      
+      document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init) : init();
+    })();
+  </script>
 </body>
 </html>
-
